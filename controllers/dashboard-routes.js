@@ -10,11 +10,12 @@ router.get('/', withAuth, async (req, res) => {
     const posts = postData.map((post) => post.get({ plain: true }));
 
     // fill in the view to be rendered
-    res.render('hmmmm what goes here', {
+    res.render('dashboard', {
       // this is how we specify a different layout other than main! no change needed
       layout: 'dashboard',
       // coming from line 10 above, no change needed
       posts,
+      logged_in: req.session.logged_in
     });
   } catch (err) {
     res.redirect('login');
@@ -23,7 +24,7 @@ router.get('/', withAuth, async (req, res) => {
 
 router.get('/new', withAuth, (req, res) => {
   // what view should we send the client when they want to create a new-post? (change this next line)
-  res.render('hmmmm what goes here', {
+  res.render('new-post', {
     // again, rendering with a different layout than main! no change needed
     layout: 'dashboard',
   });
@@ -32,13 +33,13 @@ router.get('/new', withAuth, (req, res) => {
 router.get('/edit/:id', withAuth, async (req, res) => {
   try {
     // what should we pass here? we need to get some data passed via the request body
-    const postData = await Post.findByPk(????);
+    const postData = await Post.findByPk(req.params.id);
 
     if (postData) {
       // serializing the data
       const post = postData.get({ plain: true });
       // which view should we render if we want to edit a post?
-      res.render('hmmmm what goes here', {
+      res.render('edit-post', {
         layout: 'dashboard',
         post,
       });
